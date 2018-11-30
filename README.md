@@ -11,7 +11,7 @@ make
 
 All need to be in the same directory as ChessByte
 
-- polyglot
+- polyglot (modded)
 - stockfish
 - bookfish.bin
 - polyglot.ini
