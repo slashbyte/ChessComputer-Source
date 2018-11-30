@@ -8,10 +8,12 @@ navigate to the src directory
 make
 ./ChessByte
 ```
-button input is emulated at the moment
+
+All need to be in the same directory as ChessByte
 
 - polyglot
 - stockfish
 - bookfish.bin
 - polyglot.ini
-all need to be in the same directory as ChessByte
+
+Button input is emulated at the moment
