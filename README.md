@@ -19,3 +19,4 @@ Button input is emulated at the moment.
 Hardware display is working.
 
 ### Working on PI image
+For a release, when I get there...
