@@ -15,6 +15,7 @@ MIT License (https://opensource.org/licenses/MIT)
 #include <stdio.h>
 #include <iostream>
 #include <thread>
+#include <mutex>
 #include "pstream.h"
 
 #include "ht16k33.h"
@@ -47,7 +48,7 @@ int main(void)
 
     HT.begin(ADDR, 4); //address of the display and the number of digits
     HT.clrAll();
-    HT.print("SLASH/BTYE's Chess Challenger", 100);
+    HT.print("--Chess Challenger--", 100);
 	/* start up the threads after splash message */
     CC.begin();
 

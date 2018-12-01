@@ -29,6 +29,8 @@ class BackEnd
 public:
     BackEnd(STARBURST *a);
     STARBURST* hardwareDisplay;
+	/* lock guard */
+	std::mutex m;
     /* container objects for holding data */
     Container engineOutput;  /* container for the engine output */
     Container engineInput;   /* container for the engine input */
@@ -40,7 +42,6 @@ public:
     void writeEngine(void);  /* updates the output stream */
     void readButton(void);   /* polls the buttons */
     /* helper functions */
-    bool displayBusy(void);  /* display lock */
     int checkState(std::string &a, bool b = 0); /* checks the input stream for responses */
     /* delay function to give the CPU a break in infinite loops */
     void cpuBreak(void)
@@ -53,7 +54,6 @@ private:
     redi::pstream* proc;
 	/* vars */
     const int HANDBREAK = 5; /* CPU break time, 5 milliseconds */
-    bool _displayBusy = 0;   /* display busy flag */
     const std::string response[15] = /* responses to check the input stream against */
     {
         "Error (unknown command):",

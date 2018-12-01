@@ -13,6 +13,7 @@ MIT License (https://opensource.org/licenses/MIT)
  ▀▀▀▀ .▀▀▀  ▀  ▀  ▀▀▀▀ ▀▀▀ ··▀▀▀▀   ▀ •  ▀▀▀  ▀▀▀
 *****************************************************/
 #include <thread>
+#include <mutex>
 #include <string>
 #include "pstream.h"
 #include "ht16k33.h"
@@ -123,7 +124,7 @@ char FrontEnd::buttonToChar(int a, int b) //yeah I could have used math...
 /* undo the computers last move and your last move */
 void FrontEnd::undoMove(void)
 {
-	while(displayBusy());  //hardwareDisplay lock check
+	//while(displayBusy());  //hardwareDisplay lock check
 	saveDisplayState();
     send_engine("remove"); //send undo command to the engine
 	send_display("Undo");  //show the user
@@ -160,7 +161,6 @@ void FrontEnd::newGame(int sd, bool p) //new game
  */
 void FrontEnd::ponder(bool &p)
 {
-	while(displayBusy()); //hardwareDisplay lock check
 	saveDisplayState();
 	p = !p;
 	if(p)
@@ -223,7 +223,7 @@ void FrontEnd::showMove(std::string b)
 /* show the computers hint */
 void FrontEnd::showHint(std::string b)
 {
-	while(displayBusy()); //hardwareDisplay lock check
+	//while(displayBusy()); //hardwareDisplay lock check
 	saveDisplayState();
     send_display(b); //send to display
 	hardwareDisplay->delay(1000); //second delay for hint display
@@ -274,9 +274,12 @@ void FrontEnd::hint(void)
 /* display error screen */
 void FrontEnd::error(void)
 {
-	while(displayBusy()); //hardwareDisplay lock check
     send_display("____"); //clear display
+	
+	m.lock(); //lock, outside of send_display()
     hardwareDisplay->setBlinkRate(3); //blink display
+	m.unlock(); //unlock
+	
     bool _b;
     do
     {
@@ -284,34 +287,49 @@ void FrontEnd::error(void)
         cpuBreak();
     }
     while(!_b);  //wait for any-key to be pushed
+	
+	m.lock(); //lock, outside of send_display()
     hardwareDisplay->setBlinkRate(0); //turn off blink
+	m.unlock(); //unlock
 }
 
 /* set or clear "check" LED */
 void FrontEnd::check(bool b) //set=1, clr=0
 {
-	while(displayBusy()); //hardwareDisplay lock check
+	m.lock(); //lock, outside of send_display()
     if(b)
+	{
 		hardwareDisplay->setLed(14); //fix led num
+	}
     else
+	{
         hardwareDisplay->clrLed(14); //fix led num
+	}
+	m.unlock(); //unlock
 }
 
 /* set or clear "mate" LED */
 void FrontEnd::mate(bool b) //set=1, clr=0
 {
-	while(displayBusy()); //hardwareDisplay lock check
+	m.lock(); //lock, outside of send_display()
     if(b)
+	{
         hardwareDisplay->setLed(62); //fix led num
+	}
     else
+	{
         hardwareDisplay->clrLed(62); //fix led num
+	}
+	m.unlock(); //unlock
 }
 
 /* flash when mate (the end of the game)*/
 void FrontEnd::mateBlink(void)
 {
-	while(displayBusy()); //hardwareDisplay lock check
+	m.lock(); //lock, outside of send_display()
     hardwareDisplay->setBlinkRate(2); //blink display
+	m.unlock(); //unlock
+	
     bool _b;
     do
     {
@@ -319,20 +337,25 @@ void FrontEnd::mateBlink(void)
         cpuBreak();
     }
     while(!_b);  //wait for any-key to be pushed
+	
+	m.lock(); //lock, outside of send_display()
     hardwareDisplay->setBlinkRate(0); //turn off blink
+	m.unlock(); //unlock
 }
 
 /* think screen with animation */
 void FrontEnd::thinkANI(void)
 {
-	while(displayBusy()); //hardwareDisplay lock check
     bool _b;
     int i = 0;
     do
     {
+		m.lock(); //lock, outside of send_display()
         for(int j = 0; j < 4; j++)
             hardwareDisplay->printM(spinner.at(i),j); //load membuf
         hardwareDisplay->update(); //show on display
+		m.unlock(); //unlock
+		
         i=(i+1)%4;
         hardwareDisplay->delay(100); //!!affects update time!!
 		_b = is_engine() | is_button(); //break if engine or button
@@ -353,7 +376,6 @@ void FrontEnd::think(void)
  */
 void FrontEnd::killScreen(int b, int _delay)
 {
-	while(displayBusy()); //hardwareDisplay lock check
 	saveDisplayState();
     std::string temp = "    " + KS[b-5];
     int _tempL = temp.length();
@@ -361,9 +383,12 @@ void FrontEnd::killScreen(int b, int _delay)
     bool _b;
     do
     {
+		m.lock(); //lock, outside of send_display()
         for(int j = 0; j < 4; j++)
             hardwareDisplay->printM(temp.at((i+j)%_tempL), j); // writes to "display buffer"
         hardwareDisplay->update(); //pushes to display
+		m.unlock(); //unlock
+		
         i=(i+1)%_tempL;
         hardwareDisplay->delay(_delay); //150ms delay, affects update time, might remove
         _b = is_button();
@@ -375,24 +400,27 @@ void FrontEnd::killScreen(int b, int _delay)
 /* save the current display state to a buffer*/
 void FrontEnd::saveDisplayState(void)
 {
-	while(displayBusy()); //hardwareDisplay lock check
+	m.lock(); //lock, outside of send_display()
     for(int i = 0; i < 8; i++) //save display state
+	{
         mState[i] = hardwareDisplay->memory[i];
+	}
+	m.unlock(); //unlock
 }
 
 /* restore the last display state from a buffer */
 void FrontEnd::restoreDisplayState(void)
 {
-	while(displayBusy()); //hardwareDisplay lock check
+	m.lock(); //lock, outside of send_display()
     for(int i = 0; i < 8; i++)
         hardwareDisplay->memory[i] = mState[i]; //renew state
     hardwareDisplay->update(); //display saved state
+	m.unlock(); //unlock
 }
 
 /* display the fen string on the hardware display */
 void FrontEnd::fen(std::string b)
 {
-	while(displayBusy()); //hardwareDisplay lock check
     saveDisplayState();
     while(b.length()%4) //stretch to multiple of 4
         b += " ";
@@ -413,9 +441,11 @@ void FrontEnd::fen(std::string b)
             {
                 if(i < b.length())
                 {
+					m.lock(); //lock, outside of send_display()
                     for(int j = 0; j < 4; j++)
                         hardwareDisplay->printM(b.at(i+j),j);
                     hardwareDisplay->update();
+					m.unlock(); //unlock
                     i=i+4;
                 }
                 else

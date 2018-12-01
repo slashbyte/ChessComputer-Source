@@ -13,6 +13,7 @@ MIT License (https://opensource.org/licenses/MIT)
  ▀▀▀▀ .▀▀▀  ▀  ▀  ▀▀▀▀ ▀▀▀ ··▀▀▀▀   ▀ •  ▀▀▀  ▀▀▀
 *****************************************************/
 #include <thread>
+#include <mutex>
 #include "container.h"
 #include "ht16k33.h"
 #include "starburst.h"
@@ -93,16 +94,6 @@ void BackEnd::readEngine(void)
 }
 
 /*
- Returns a busy flags
- Use this if your going to be updating the
- hardware display outside of the "writeDisplay()" function
- */
-bool BackEnd::displayBusy(void)
-{
-    return _displayBusy;
-}
-
-/*
  Constantly checks a container for display data
  if there is display data, send it to the hardware display
  */
@@ -112,7 +103,8 @@ void BackEnd::writeDisplay(void)
     {
         if(displayInput.is() == 1) //if the container is full
         {
-            _displayBusy = 1; //display lock
+            //_displayBusy = 1; //display lock
+			m.lock();
             std::string disp = displayInput.get_str(); //get the display data
             /*<<<<<<<<<<<<<<<<<<<< REMOVE A >>>>>>>>>>>>>>>>>>>>>>>>>
              check and mate DP bug fix
@@ -135,7 +127,8 @@ void BackEnd::writeDisplay(void)
             if(_mate)
                 hardwareDisplay->setLed(62); //Q&D fix
             /*<<<<<<<<<<<<<<<<<<<< REMOVE B >>>>>>>>>>>>>>>>>>>>>>>>>*/
-            _displayBusy = 0; //display unlock
+            //_displayBusy = 0; //display unlock
+			m.unlock();
         }
         cpuBreak();
     }
@@ -173,6 +166,7 @@ void BackEnd::readButton(void)
     {
         if(buttonOutput.is() == 0) //if no button is available
         {
+			//m.lock();
             /* <<<<<<<<<<<<<<<<< REMOVE >>>>>>>>>>> */
             //quick and dirty emulation for keypad
             char a = getchar(); //get char from cin
@@ -204,6 +198,7 @@ void BackEnd::readButton(void)
                     buttonOutput.set_int_easy(k); //place in container
             }
             /* <<<<<<<<<<<<<<<<< REMOVE >>>>>>>>>>> */
+			//m.unlock();
         }
         cpuBreak();
     }
