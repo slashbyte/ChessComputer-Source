@@ -5,7 +5,7 @@ CFLAGS=-c -Wall
 LDFLAGS= -lpthread
 SOURCES=main.cpp ht16k33.cpp starburst.cpp container.cpp backend.cpp frontend.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=ChessByte
+EXECUTABLE=chessByte
 
 all: $(SOURCES) $(EXECUTABLE)
     

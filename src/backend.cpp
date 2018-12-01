@@ -24,19 +24,20 @@ This class contains functions that
 will be threaded.
 
 Theses functions.....
-- manage polyglot's io stream
-- manage hardware button polling
+- manage polyglot's IO stream
+- manage hardware button polling (emulated at the moment)
 - manage hardware display updates
 *************************************/
 
 /*
  Constructor, takes a "STARBURST" display object
  Starts the polyglot stream
+ assumes polylgot is installed in its default directory
 */
 BackEnd::BackEnd(STARBURST *a)
 {
     //start the stream
-    proc = new redi::pstream("./polyglot", redi::pstream::pstdout |
+    proc = new redi::pstream("polyglot", redi::pstream::pstdout |
                              redi::pstream::pstdin | redi::pstream::pstderr);
     hardwareDisplay = a;
 }
@@ -56,10 +57,10 @@ std::string BackEnd::getStream(void)
     std::string buffer;
     if(!std::getline(*proc, buffer))
     {
-        printf("Check your polyglot Install and .ini file\n");
-        printf("also check your engine installation path\n");
+        printf("Check your Polyglot install and .ini file\n");
+        printf("also check your engine installation path.\n");
         printf("Stream Error, see ya!\n");
-        exit(EXIT_FAILURE); //don't do this at home kids
+        exit(EXIT_FAILURE); //don't try this at home kids
     }
     return buffer;
 }

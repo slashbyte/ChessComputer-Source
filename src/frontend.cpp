@@ -394,6 +394,7 @@ void FrontEnd::killScreen(int b, int _delay)
         _b = is_button();
     }
     while(!_b);  //wait for any-key to be pushed
+	get_button(); //throw out button press
 	restoreDisplayState();
 }
 

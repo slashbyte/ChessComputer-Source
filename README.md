@@ -6,14 +6,16 @@ Source code for ChessComputer
 navigate to the src directory
 ```
 make
-./ChessByte
+./chessByte (name will change in the future)
 ```
 
-All need to be in the same directory as ChessByte
+All file need to be in the same directory as chessByte
 
-- polyglot (modded)
-- stockfish
-- bookfish.bin
 - polyglot.ini
+- bookfish.bin (change polyglot.ini file to enable book read)
 
-Button input is emulated at the moment
+Button input is emulated at the moment.
+
+Hardware display is working.
+
+### Working on PI image
