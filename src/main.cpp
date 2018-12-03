@@ -57,11 +57,11 @@ int main(void)
     bool SIDE = 0;        //players side
     bool NEWGAME = 1;     //newgame flag
 	bool PONDER = 0;      //ponder flag
-	int searchDepth = 10; //search depth
+	int searchTime = 0; //search time
     const bool WHITE = 0;
     const bool BLACK = 1;
 
-	CC.newGame(searchDepth, PONDER); //start new game
+	CC.newGame(searchTime, PONDER); //start new game
 
     while(1) //main loop
     {
@@ -75,7 +75,7 @@ int main(void)
                 NEWGAME = 1;                     //reset game flag
                 SIDE = 0;                        //reset side to default
                 CC.mate(0);                      //clear mate
-                CC.newGame(searchDepth, PONDER); //new game
+                CC.newGame(searchTime, PONDER); //new game
             }
 			/* CB, ponder control */
             if(_c == 1)
@@ -97,7 +97,7 @@ int main(void)
             }
 			/* LV, set level */
             if(_c == 4)
-                CC.level(searchDepth); //select your level of play
+                CC.level(searchTime); //select your level of play
 			/* DM, undo */
             if(_c == 5)                //DM, undo a move
 			{
@@ -158,17 +158,15 @@ int main(void)
 			{
 				printf("COMPUTER: %s\n", _d.c_str()); //comment me out!
                 CC.showMove(_d);                      //display the computers move
-				CC.getBoard();                        //debug stuff
+				CC.getBoard();                        //debug stuff, comment me out
 			}
-			/* hint display 
-			  "hint" wont work in "level 01", IDK why
-			  I think it has something to do with 
-			  the "super limited" search depth
-			 */
+			/* Display Hint */
             if(_a == 13)
 			{
 				printf("HINT: %s\n", _d.c_str()); //comment me out!
-                CC.showHint(_d);                  //in different notation.
+                CC.showHint(_d);                  //Algebraic notation.
+				//hint sometimes gets clipped
+				//might add scroll
 			}
 			/* FEN string display */
             if(_a == 14)

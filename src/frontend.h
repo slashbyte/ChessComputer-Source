@@ -44,7 +44,7 @@ public:
 	/* Game play functions */
     void undoMove(void);                /* undo the computers last move and your last move */
     void go(void);                      /* invokes the chess engine */
-    void newGame(int sd, bool p);       /* begins a new game, takes searchDepth and ponder flag */
+    void newGame(int st, bool p);       /* begins a new game, takes searchDepth and ponder flag */
     bool getMove(int b);                /* grab a move from the user */
     void showMove(std::string b);       /* show the computers move */
     void clear(void);                   /* clears the screen */
@@ -60,7 +60,7 @@ public:
     void fen(std::string b);            /* displays the FEN pos string */
     void saveDisplayState(void);        /* saves the current display state */
     void restoreDisplayState(void);     /* restores the saved display state */
-    void level(int &sd);                /* sets the search depth level */
+    void level(int &st);                /* sets the search depth level */
 	void ponder(bool &p);               /* turn ponder on or off */
 	void getBoard(void);                /* request board */
 	void printBoard(std::string a);     /* display the chessboard on the console (for debugging) */

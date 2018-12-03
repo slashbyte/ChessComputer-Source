@@ -142,11 +142,11 @@ void FrontEnd::go(void)
  start a new game
  pass in the search depth and ponder mode
  */
-void FrontEnd::newGame(int sd, bool p) //new game
+void FrontEnd::newGame(int st, bool p) //new game
 {
-    std::string _sd = "sd " + std::to_string(sd); //convert search depth to string
+	std::string _st = "st " + std::to_string(st); //time level to string
     send_engine("new");      //send the engine a command
-    send_engine(_sd);
+    send_engine(_st);
 	if(p)                    //send ponder
 		send_engine("hard"); //ponder on
 	else
@@ -458,15 +458,15 @@ void FrontEnd::fen(std::string b)
 }
 
 /* set the engine level */
-void FrontEnd::level(int &sd) //set level
+void FrontEnd::level(int &st) //set level
 {
     saveDisplayState();
-    std::string _sd = "Lv";
-    if(sd < 10)
-        _sd += "0" + std::to_string(sd);
+    std::string _st = "Lv";
+    if(st < 10)
+        _st += "0" + std::to_string(st);
     else
-        _sd += std::to_string(sd);
-    send_display(_sd);
+        _st += std::to_string(st);
+    send_display(_st);
     while(1)
     {
         bool _b = is_button();
@@ -480,18 +480,19 @@ void FrontEnd::level(int &sd) //set level
 			}
             if(_c == 3) //enter
             {
-                send_engine("sd " + std::to_string(sd)); //set new level
+				send_engine("st " + std::to_string(st)); //set new time level
                 restoreDisplayState();
                 return;
             }
             if(_c == 4) //lv button, increment
             {
-                sd = 1+(sd%25);
-                if(sd < 10)
-                    _sd = "Lv0" + std::to_string(sd);
+                //sd = 1+(sd%25);
+				st = (st+1)%25;
+                if(st < 10)
+                    _st = "Lv0" + std::to_string(st);
                 else
-                    _sd = "Lv" + std::to_string(sd);
-                send_display(_sd);
+                    _st = "Lv" + std::to_string(st);
+                send_display(_st);
             }
         }
         cpuBreak();
