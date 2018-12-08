@@ -30,9 +30,16 @@ using namespace std;
 
 int main(void)
 {
-    printf("Chess Challenger\n");
-    printf("Slash/Byte\n");
+    printf("\n");
+    printf("Chess Challenger                              2018\n");
+	printf(".▄▄ · ▄▄▌   ▄▄▄· .▄▄ ·  ▄ .▄▄▄▄▄·  ▄· ▄▌▄▄▄▄▄▄▄▄ .\n");
+	printf("▐█ ▀. ██•  ▐█ ▀█ ▐█ ▀. ██▪▐█▐█ ▀█▪▐█▪██▌•██  ▀▄.▀·\n");
+	printf("▄▀▀▀█▄██▪  ▄█▀▀█ ▄▀▀▀█▄██▀▐█▐█▀▀█▄▐█▌▐█▪ ▐█.▪▐▀▀▪▄\n");
+	printf("▐█▄▪▐█▐█▌▐▌▐█ ▪▐▌▐█▄▪▐███▌▐▀██▄▪▐█ ▐█▀·. ▐█▌·▐█▄▄▌\n");
+	printf(" ▀▀▀▀ .▀▀▀  ▀  ▀  ▀▀▀▀ ▀▀▀ ··▀▀▀▀   ▀ •  ▀▀▀  ▀▀▀ \n");
+	printf("Running....\n");
 	/* mapped the buttons to the keyboard for testing on the PC */
+	/*
     printf("----------------------\n"); 
     printf("Keyboard Emulation Map\n"); 
     printf("----------------------\n");
@@ -41,6 +48,7 @@ int main(void)
     printf("A:A1, S:B2, D:C3, F:D4\n");
     printf("Z:E5, X:F6, C:G7, V:H8\n");
     printf("----------------------\n");
+	*/
 
 	/* hardware display obj */
     STARBURST HT;
@@ -48,7 +56,11 @@ int main(void)
 
     HT.begin(ADDR, 4); //address of the display and the number of digits
     HT.clrAll();
-    HT.print("--Chess Challenger--", 100);
+	HT.setLed(65); //theatrics 
+	HT.setLed(64); //theatrics 
+    HT.print("Chess Challenger 2018", 100);
+	HT.clrLed(65); //theatrics 
+	HT.clrLed(64); //theatrics 
 	/* start up the threads after splash message */
     CC.begin();
 
@@ -57,7 +69,7 @@ int main(void)
     bool SIDE = 0;        //players side
     bool NEWGAME = 1;     //newgame flag
 	bool PONDER = 0;      //ponder flag
-	int searchTime = 0; //search time
+	int searchTime = 0;   //search time
     const bool WHITE = 0;
     const bool BLACK = 1;
 
@@ -75,7 +87,8 @@ int main(void)
                 NEWGAME = 1;                     //reset game flag
                 SIDE = 0;                        //reset side to default
                 CC.mate(0);                      //clear mate
-                CC.newGame(searchTime, PONDER); //new game
+				CC.check(0);                     //clear check
+                CC.newGame(searchTime, PONDER);  //new game
             }
 			/* CB, ponder control */
             if(_c == 1)
@@ -152,7 +165,7 @@ int main(void)
                 CC.mateBlink();         //flash display @ 1hz, if mate (end of game)
 			/* draw message */
             if((_a >= 7) && (_a <= 11)) //scroll kill-screen (draw message)
-                CC.killScreen(_a, 150); //@150ms/char speed
+                CC.killScreen(_a, 120); //@150ms/char speed
 			/* Display computer move */
             if(_a == 12)
 			{
@@ -165,8 +178,6 @@ int main(void)
 			{
 				printf("HINT: %s\n", _d.c_str()); //comment me out!
                 CC.showHint(_d);                  //Algebraic notation.
-				//hint sometimes gets clipped
-				//might add scroll
 			}
 			/* FEN string display */
             if(_a == 14)
@@ -176,7 +187,7 @@ int main(void)
 			}
 			/* polyglot board output */
 			if(_a == 15)
-				CC.printBoard(_d);				
+				CC.printBoard(_d); //display board on console				
         }
         CC.cpuBreak();
     }

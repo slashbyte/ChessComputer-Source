@@ -223,10 +223,32 @@ void FrontEnd::showMove(std::string b)
 /* show the computers hint */
 void FrontEnd::showHint(std::string b)
 {
-	//while(displayBusy()); //hardwareDisplay lock check
+	/*
 	saveDisplayState();
     send_display(b); //send to display
 	hardwareDisplay->delay(1000); //second delay for hint display
+	restoreDisplayState();
+	*/
+	
+	saveDisplayState();
+	std::string temp = "    " + b;
+	int _tempL = temp.length();
+	int i = 0;
+	bool _b;
+	do
+	{
+		m.lock(); //lock, outside of send_display()
+		for(int j = 0; j < 4; j++)
+			hardwareDisplay->printM(temp.at((i+j)%_tempL), j); // writes to "display buffer"
+		hardwareDisplay->update(); //pushes to display
+		m.unlock(); //unlock
+		
+		i=(i+1)%_tempL;
+        hardwareDisplay->delay(120); //120ms delay, affects update time, might remove
+        _b = is_button();		
+	}
+	while(!_b);  //wait for any-key to be pushed
+	get_button(); //throw out button press
 	restoreDisplayState();
 }
 
@@ -299,11 +321,11 @@ void FrontEnd::check(bool b) //set=1, clr=0
 	m.lock(); //lock, outside of send_display()
     if(b)
 	{
-		hardwareDisplay->setLed(14); //fix led num
+		hardwareDisplay->setLed(64); //fixed
 	}
     else
 	{
-        hardwareDisplay->clrLed(14); //fix led num
+        hardwareDisplay->clrLed(64); //fixed
 	}
 	m.unlock(); //unlock
 }
@@ -314,11 +336,11 @@ void FrontEnd::mate(bool b) //set=1, clr=0
 	m.lock(); //lock, outside of send_display()
     if(b)
 	{
-        hardwareDisplay->setLed(62); //fix led num
+        hardwareDisplay->setLed(65); //fixed
 	}
     else
 	{
-        hardwareDisplay->clrLed(62); //fix led num
+        hardwareDisplay->clrLed(65); //fixed
 	}
 	m.unlock(); //unlock
 }

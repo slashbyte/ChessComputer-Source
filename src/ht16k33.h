@@ -26,8 +26,7 @@
  *
  * 2018-11-11  Slash/byte <I don't remember my email AT this time>
  *             Ported the code to the raspberry pi
- *             Broke the key scanning feature lol
- *             he also plans on fixing it later
+ *             I fixed it latter...
  *
  * 	.▄▄ · ▄▄▌   ▄▄▄· .▄▄ ·  ▄ .▄▄▄▄▄·  ▄· ▄▌▄▄▄▄▄▄▄▄ .
  *  ▐█ ▀. ██•  ▐█ ▀█ ▐█ ▀. ██▪▐█▐█ ▀█▪▐█▪██▌•██  ▀▄.▀·
@@ -60,6 +59,8 @@ public:
     int setBrightness(int val); //0-15, 15 is max
     //add button read code
     uint8_t readINTflag(void); //read the interrupt flag
+	bool readKeys(void); //reads keys from chip mem to "keyRam" and clears intflag
+	int getKey(void); //return the key number pressed, waits for release before return
     //got the funk back
     int setBlinkRate(int rate); //sets the blink rate, 0-3, off -> fast!
     int setLedM(int index); //set led in buffer
@@ -77,7 +78,7 @@ public:
     int i2c_read(uint8_t addrMem, uint16_t *data, int size);
     //debug stuff
     int memDump(void); //for debugging 0x00-0x0E
-    int keyDump(void); //for debugging 0x40-0x44, I might need to fix the bit ordering
+    int keyDump(void); //for debugging 0x40-0x44
 private:
     int _address;
     int file_i2c;

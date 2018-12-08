@@ -104,31 +104,10 @@ void BackEnd::writeDisplay(void)
     {
         if(displayInput.is() == 1) //if the container is full
         {
-            //_displayBusy = 1; //display lock
-			m.lock();
             std::string disp = displayInput.get_str(); //get the display data
-            /*<<<<<<<<<<<<<<<<<<<< REMOVE A >>>>>>>>>>>>>>>>>>>>>>>>>
-             check and mate DP bug fix
-             a temp solution for testing the
-             check and mate LEDs
-             This will change when its running on real hardware
-            */
-            //preserve DP state
-            bool _check = (hardwareDisplay->memory[0] & 0x4000); //Q&D fix
-            bool _mate = (hardwareDisplay->memory[3] & 0x4000);  //Q&D fix
-            /*<<<<<<<<<<<<<<<<<<<< REMOVE A >>>>>>>>>>>>>>>>>>>>>>>>>*/
-
+			m.lock();
             if(!disp.empty())
                 hardwareDisplay->print(disp); //writes string to hardware display
-
-            /*<<<<<<<<<<<<<<<<<<<< REMOVE B >>>>>>>>>>>>>>>>>>>>>>>>>*/
-            //re-enable DP state after write
-            if(_check)
-                hardwareDisplay->setLed(14); //Q&D fix
-            if(_mate)
-                hardwareDisplay->setLed(62); //Q&D fix
-            /*<<<<<<<<<<<<<<<<<<<< REMOVE B >>>>>>>>>>>>>>>>>>>>>>>>>*/
-            //_displayBusy = 0; //display unlock
 			m.unlock();
         }
         cpuBreak();
@@ -155,52 +134,66 @@ void BackEnd::writeEngine(void)
 }
 
 /*
- this is a CIN button emulation,
- this will change when I have real hardware
-
- Constantly checks cin for a button read,
+ Constantly checks hardware for a button read,
  then adds it to a container
  */
 void BackEnd::readButton(void)
 {
     while(1)
     {
-        if(buttonOutput.is() == 0) //if no button is available
+		if(buttonOutput.is() == 0) //if no button is available
         {
-			//m.lock();
-            /* <<<<<<<<<<<<<<<<< REMOVE >>>>>>>>>>> */
-            //quick and dirty emulation for keypad
-            char a = getchar(); //get char from cin
-            if(a) //check input
-            {
-                /* keypad mapping */
-                int k = -1;
-                if(a == '1') k=0; //RE
-                if(a == '2') k=1; //CB
-                if(a == '3') k=2; //CL
-                if(a == '4') k=3; //EN
+			m.lock();
+			int a = hardwareDisplay->getKey(); //read hardware keypress
+			m.unlock();
+			
+			if(a != -1)
+			{
+				//change button number
+				int k = -1;
+				if(a == 0)  k=0;  //RE
+				if(a == 16) k=1;  //CB
+				if(a == 1)  k=2;  //CL
+				if(a == 17) k=3;  //EN
 
-                if(a == 'q') k=4; //LV
-                if(a == 'w') k=5; //DM
-                if(a == 'e') k=6; //PB
-                if(a == 'r') k=7; //PV
+				if(a == 2)  k=4;  //LV
+				if(a == 18) k=5;  //DM
+				if(a == 3)  k=6;  //PB
+				if(a == 19) k=7;  //PV
 
-                if(a == 'a') k=8; //A1
-                if(a == 's') k=9; //B2
-                if(a == 'd') k=10; //C3
-                if(a == 'f') k=11; //D4
+				if(a == 4)  k=8;  //A1
+				if(a == 20) k=9;  //B2
+				if(a == 5)  k=10; //C3
+				if(a == 21) k=11; //D4
 
-                if(a == 'z') k=12; //E5
-                if(a == 'x') k=13; //F6
-                if(a == 'c') k=14; //G7
-                if(a == 'v') k=15; //H8
+				if(a == 6)  k=12; //E5
+				if(a == 22) k=13; //F6
+				if(a == 7)  k=14; //G7
+				if(a == 23) k=15; //H8		
 
-                if(k!= -1) //if input is ok
-                    buttonOutput.set_int_easy(k); //place in container
-            }
-            /* <<<<<<<<<<<<<<<<< REMOVE >>>>>>>>>>> */
-			//m.unlock();
-        }
+				if(k != -1) //if input was ok
+				{
+					buttonOutput.set_int_easy(k); //place in container
+				}
+				
+				bool flag = 1;
+				hardwareDisplay->delay(50); //wait for flag to reset
+				
+				//resume upon release
+				while(flag) //while its set
+				{
+					m.lock();
+					hardwareDisplay->readKeys(); //clear it and
+					m.unlock();
+					
+					hardwareDisplay->delay(50); //wait
+					
+					m.lock();
+					flag = hardwareDisplay->readINTflag(); //check again
+					m.unlock();
+				}				
+			}
+		}
         cpuBreak();
     }
 }

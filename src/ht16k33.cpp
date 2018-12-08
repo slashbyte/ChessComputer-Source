@@ -26,8 +26,7 @@
  *
  * 2018-11-11  Slash/byte <I don't remember my email AT this time>
  *             Ported the code to the raspberry pi
- *             Broke the key scanning feature lol
- *             he also plans on fixing it later
+ *             I fixed it latter...
  *
  * 	.▄▄ · ▄▄▌   ▄▄▄· .▄▄ ·  ▄ .▄▄▄▄▄·  ▄· ▄▌▄▄▄▄▄▄▄▄ .
  *  ▐█ ▀. ██•  ▐█ ▀█ ▐█ ▀. ██▪▐█▐█ ▀█▪▐█▪██▌•██  ▀▄.▀·
@@ -260,6 +259,38 @@ int HT16K33::keyDump(void)
     for(int i = 0; i < 3; i++)
         printf("0x%02X ..... 0x%04X\n", (i*2)+0x40, a[i]);
     return 0;
+}
+
+//read all the key presses in chip mem, and resets interrupt flag
+bool HT16K33::readKeys(void)
+{
+	uint16_t a[3] = {0};
+    int j = i2c_read(0x40, a, 3); //reads chip mem. resets interrupt flag
+	if(j!=0)
+		return 1;
+	for(int i = 0; i < 3; i++)
+		keyRam[i] = a[i]; //copies to var
+	return 0; //Aok
+}
+
+//only return the current key pressed
+//multiple key-presses will result in undefined behavior
+int HT16K33::getKey(void)
+{
+	int numIndex = 0;
+	if(readINTflag()) //if a key is pressed
+	{
+		if(readKeys())
+			return -1;
+		for(int i = 0; i < 3; i++)
+			for(int j = 0; j < 16; j++)
+			{
+				if(((keyRam[i] >> j)&1))
+					return numIndex;
+				numIndex++;
+			}
+	}
+	return -1; //return -1 if error
 }
 
 //clr buffer

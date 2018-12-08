@@ -37,6 +37,7 @@
 STARBURST::STARBURST()
 {
     //hi, I'm a comment, how are you
+	//I'm good, you?
 }
 
 //init
