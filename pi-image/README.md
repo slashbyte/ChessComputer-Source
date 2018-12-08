@@ -15,7 +15,10 @@ Raspberry Pi image ChessComputer
 * Added adafruit readonly-fs script
 
 ### Setup
-Flash the SD card with the pi image using Etcher or something similar. Once thats done, open up "wpa_supplicant.conf" and edit it for your home wifi network.
+Flash the SD card with the pi image using Etcher or something similar.
+
+### Wifi
+Open up "wpa_supplicant.conf" and edit it for your home wifi network.
 ```
 network={
    ssid="WIFI"
@@ -30,7 +33,7 @@ Upon first boot there are a few things to do, after it unpacks itself (ETA 2min)
 username: pi
 password: raspberry
 ```
-After that your going to want to stop the chessChalenger service
+After that your going to want to stop the chessChallenger service
 ```
 sudo systemctl stop chess.service
 ```
