@@ -15,7 +15,6 @@ Raspberry Pi image ChessComputer
 * Added adafruit readonly-fs script
 
 ### Setup
-```
 Flash the SD card with the pi image using Etcher or something similar. Once thats done, open up "wpa_supplicant.conf" and edit it for your home wifi network.
 ```
 network={
