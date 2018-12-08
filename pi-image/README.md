@@ -49,9 +49,9 @@ Once there, execute the script
 sudo ./read-only-fs.sh
 ```
 when prompted, 
-*The GPIO pin for read/write jumper is on GPIO21, its soldered on board.
-*No need for the halt utility
-*Turn the watchdog on
+* The GPIO pin for read/write jumper is on GPIO21, its soldered on board.
+* No need for the halt utility
+* Turn the watchdog on
 
 ### Rebooting
 ```
