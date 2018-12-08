@@ -36,8 +36,10 @@
 // Constructor
 STARBURST::STARBURST()
 {
-    //hi, I'm a comment, how are you
-	//I'm good, you?
+    //Hi, I'm a comment, how are you
+	                                   //I'm good, you?
+	//can't complain, so whats it like to be a Raspberry Pi?
+	                                   //kind of like being a !cake
 }
 
 //init

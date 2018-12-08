@@ -1,0 +1,5 @@
+-start the program from a service
+	sudo cp chess.service /etc/systemd/system/chess.service
+		(check) sudo systemctl start chess.service
+		(check) sudo systemctl stop chess.service
+	sudo systemctl enable chess.service

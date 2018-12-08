@@ -169,25 +169,27 @@ int main(void)
 			/* Display computer move */
             if(_a == 12)
 			{
-				printf("COMPUTER: %s\n", _d.c_str()); //comment me out!
+				//printf("COMPUTER: %s\n", _d.c_str()); //comment me out!
                 CC.showMove(_d);                      //display the computers move
-				CC.getBoard();                        //debug stuff, comment me out
+				//CC.getBoard();                        //debug stuff, comment me out
 			}
 			/* Display Hint */
             if(_a == 13)
 			{
-				printf("HINT: %s\n", _d.c_str()); //comment me out!
+				//printf("HINT: %s\n", _d.c_str()); //comment me out!
                 CC.showHint(_d);                  //Algebraic notation.
 			}
 			/* FEN string display */
             if(_a == 14)
 			{
-				printf("FEN: %s\n", _d.c_str()); //comment me out!
+				//printf("FEN: %s\n", _d.c_str()); //comment me out!
                 CC.fen(_d);                      //display fen string
 			}
 			/* polyglot board output */
+			/*
 			if(_a == 15)
-				CC.printBoard(_d); //display board on console				
+				CC.printBoard(_d); //display board on console
+			*/			
         }
         CC.cpuBreak();
     }

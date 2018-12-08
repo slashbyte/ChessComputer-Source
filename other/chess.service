@@ -1,0 +1,12 @@
+[Unit]
+Description=Chess Challenger
+
+[Service]
+ExecStart=/home/pi/chess/chessByte
+WorkingDirectory=/home/pi/chess
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+
+[Install]
+WantedBy=basic.target
