@@ -1,5 +1,5 @@
 # ChessComputer-Raspberry Pi image
-Raspberry Pi image ChessComputer
+Raspberry Pi image for Chess Challenger 2018
 
 ## Image Log
 * Using raspbian-stretch-lite (2018-11-13)
