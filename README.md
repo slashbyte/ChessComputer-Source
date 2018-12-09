@@ -15,3 +15,12 @@ All file need to be in the same directory as chessByte
 
 - polyglot.ini
 - bookfish.bin (change polyglot.ini file to enable book read)
+
+
+## Authors
+* **Slash/Byte**
+## License
+This project is licensed under the MIT License
+(https://opensource.org/licenses/MIT)
+## Acknowledgments
+* Science
