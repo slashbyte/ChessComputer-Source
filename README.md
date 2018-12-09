@@ -1,5 +1,5 @@
 # ChessComputer-Source
-Source code for ChessComputer
+Source code for [ChessComputer](https://github.com/slashbyte/ChessComputer)
 
 ## Raspberry PI Image Release
 [Chess Challenger PI Image](https://github.com/slashbyte/ChessComputer-Source/releases)
