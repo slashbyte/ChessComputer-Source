@@ -2,7 +2,7 @@
 Source code for ChessComputer
 
 ## Raspberry PI Image Release
-[Chess Challenger PI Image](https://github.com/slashbyte/ChessComputer-Source/releases/download/v0.1.0/dev-image-gypsy.img)
+[Chess Challenger PI Image](https://github.com/slashbyte/ChessComputer-Source/releases)
 
 ### To build
 navigate to the src directory
