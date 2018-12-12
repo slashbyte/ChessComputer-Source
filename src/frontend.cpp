@@ -192,6 +192,19 @@ bool FrontEnd::getMove(int b)
         if(_b)
         {
             int _c = get_button();
+		    if((_c >= 8) && (_c <= 11) && (digit == 4)) //buttons 8-11
+            {
+				char underP[4] = {'q','r','b','n'}; //under promotion values
+				if(move.length() < 5)
+					move += underP[_c - 8];             //assign promotion val to move
+				else
+					move.at(digit) = underP[_c - 8]; //re-assign promotion val to move
+				
+				std::string _underP = "PR ";        //format fancy string for display
+				_underP += underP[_c - 8];          //add promotion val to string
+				send_display(_underP, 1);           //send it to the display for the user, upper
+				//digit++;                            //increment digit
+            }
             if((_c >= 8) && (_c <= 15) && (digit < 4)) //buttons 8-15
             {
                 move.at(digit) = buttonToChar(_c, digit);
@@ -222,7 +235,7 @@ void FrontEnd::showMove(std::string b)
 		std::string _b;
 		for(int i = 0; i < 4; i++) //trims the string to 4 chars for display
 			_b += b.at(i);
-		send_display(b, 1); //send to display, upper
+		send_display(_b, 1); //send to display, upper
 	}
 	else
 		send_display(b, 1); //send to display, upper
