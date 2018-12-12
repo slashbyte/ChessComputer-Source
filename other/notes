@@ -3,3 +3,6 @@
 		(check) sudo systemctl start chess.service
 		(check) sudo systemctl stop chess.service
 	sudo systemctl enable chess.service
+	
+	
+http://wbec-ridderkerk.nl/html/details1/PolyGlot.html

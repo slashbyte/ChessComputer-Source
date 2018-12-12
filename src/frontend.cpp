@@ -217,7 +217,15 @@ bool FrontEnd::getMove(int b)
 /* show the computers move */
 void FrontEnd::showMove(std::string b)
 {
-    send_display(b, 1); //send to display, upper
+	if(b.length() > 4) //needed for improper pawn promotion
+	{
+		std::string _b;
+		for(int i = 0; i < 4; i++) //trims the string to 4 chars for display
+			_b += b.at(i);
+		send_display(b, 1); //send to display, upper
+	}
+	else
+		send_display(b, 1); //send to display, upper
 }
 
 /* show the computers hint */
