@@ -18,7 +18,7 @@ All file need to be in the same directory as chessByte
 
 
 ## Authors
-* **Slash/Byte**
+* **Slash/Byte** (slashqpbyte@gmail.com)
 ## License
 This project is licensed under the MIT License
 (https://opensource.org/licenses/MIT)
